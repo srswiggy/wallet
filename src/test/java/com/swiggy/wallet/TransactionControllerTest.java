@@ -2,7 +2,7 @@ package com.swiggy.wallet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swiggy.wallet.entities.Money;
-import com.swiggy.wallet.enums.Currency;
+import com.swiggy.wallet.entities.Currency;
 import com.swiggy.wallet.requestModels.TransactionRequestModel;
 import com.swiggy.wallet.responseModels.TransactionsResponseModel;
 import com.swiggy.wallet.services.TransactionService;

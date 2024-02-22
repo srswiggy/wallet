@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-public class AppSecurityConfig {
+public class SecurityConfig {
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
@@ -23,8 +23,10 @@ public class AppSecurityConfig {
 
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) -> {
-                    authorize.requestMatchers(HttpMethod.POST,"/api/v1/users").permitAll().
-                            anyRequest().authenticated();
+                    authorize.requestMatchers(HttpMethod.POST,"/api/v1/users").permitAll()
+                            .requestMatchers("/h2-console/**").permitAll()
+                            .requestMatchers("/api/v1/users/**").authenticated()
+                            .anyRequest().permitAll();
                 }).
                 headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)).httpBasic(Customizer.withDefaults());
 

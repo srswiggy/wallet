@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService{
     public User register(UserRequestModel user) throws UserAlreadyExistsException {
         if(userDao.findByUserName(user.getUserName()).isPresent())
             throw new UserAlreadyExistsException(USERNAME_ALREADY_TAKEN);
-        User userToSave = new User(user.getUserName(), passwordEncoder.encode(user.getPassword()));
+        User userToSave = new User(user.getUserName(), passwordEncoder.encode(user.getPassword()), user.getCountry());
         return userDao.save(userToSave);
     }
 

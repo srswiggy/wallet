@@ -1,14 +1,9 @@
 package com.swiggy.wallet;
 
-import com.swiggy.wallet.entities.Money;
-import com.swiggy.wallet.entities.User;
-import com.swiggy.wallet.enums.Currency;
-import com.swiggy.wallet.exceptions.InsufficientBalanceException;
-import com.swiggy.wallet.exceptions.InvalidAmountException;
+import com.swiggy.wallet.entities.*;
 import com.swiggy.wallet.exceptions.UserAlreadyExistsException;
 import com.swiggy.wallet.exceptions.UserNotFoundException;
 import com.swiggy.wallet.repository.UserDAO;
-import com.swiggy.wallet.requestModels.TransactionRequestModel;
 import com.swiggy.wallet.requestModels.UserRequestModel;
 import com.swiggy.wallet.services.UserServiceImpl;
 import com.swiggy.wallet.services.WalletService;
@@ -60,13 +55,18 @@ public class UserServiceTest {
     void expectUserCreated() throws UserAlreadyExistsException {
         when(userDao.findByUserName("testUser")).thenReturn(Optional.empty());
         when(passwordEncoder.encode("testPassword")).thenReturn("encodedPassword");
-        when(userDao.save(any())).thenReturn(new User("testUser", "encodedPassword"));
-        UserRequestModel userRequestModel = new UserRequestModel("testUser", "testPassword");
+        when(userDao.save(any())).thenReturn(
+                new User(1, "testUser", "encodedPassword", new Wallet(1, new Money(0.0, Currency.INR)), Country.INDIA)
+        );
+        UserRequestModel userRequestModel = new UserRequestModel("testUser", "testPassword", Country.INDIA);
 
         User savedUser = userService.register(userRequestModel);
 
         assertEquals("testUser", savedUser.getUserName());
         assertEquals("encodedPassword", savedUser.getPassword());
+        assertEquals(Country.INDIA, savedUser.getCountry());
+        assertEquals(new Money(0.0, Currency.INR), savedUser.getWallet().getMoney());
+        assertEquals(new Wallet(1, new Money(0.0, Currency.INR)), savedUser.getWallet());
         assertNotNull(savedUser.getWallet());
         verify(userDao, times(1)).findByUserName("testUser");
         verify(passwordEncoder, times(1)).encode("testPassword");
@@ -76,7 +76,7 @@ public class UserServiceTest {
     @Test
     void expectUserAlreadyExistsException() {
         when(userDao.findByUserName("existingUser")).thenReturn(Optional.of(new User()));
-        UserRequestModel userRequestModel = new UserRequestModel("existingUser", "password");
+        UserRequestModel userRequestModel = new UserRequestModel("existingUser", "password", Country.INDIA);
 
         assertThrows(UserAlreadyExistsException.class, () -> {
             userService.register(userRequestModel);
@@ -88,7 +88,7 @@ public class UserServiceTest {
     @Test
     void expectDeleteUserSuccessfully() throws UserNotFoundException {
         String username = "testUser";
-        User user = new User(username, "password");
+        User user = new User(username, "password", Country.INDIA);
         when(userDao.findByUserName(username)).thenReturn(Optional.of(user));
         when(authentication.getName()).thenReturn(username);
         when(securityContext.getAuthentication()).thenReturn(authentication);

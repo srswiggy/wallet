@@ -1,15 +1,12 @@
 package com.swiggy.wallet;
 
-import com.swiggy.wallet.entities.Money;
-import com.swiggy.wallet.entities.User;
-import com.swiggy.wallet.entities.Wallet;
+import com.swiggy.wallet.entities.*;
 import com.swiggy.wallet.exceptions.AuthenticationFailedException;
 import com.swiggy.wallet.exceptions.InsufficientBalanceException;
 import com.swiggy.wallet.exceptions.InvalidAmountException;
 import com.swiggy.wallet.repository.UserDAO;
 import com.swiggy.wallet.requestModels.WalletRequestModel;
 import com.swiggy.wallet.responseModels.WalletResponseModel;
-import com.swiggy.wallet.enums.Currency;
 import com.swiggy.wallet.repository.WalletDAO;
 import com.swiggy.wallet.services.WalletServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,7 +56,7 @@ public class WalletServiceTest {
 
     @Test
     void expectAmountDepositedWithValidAmount() throws Exception {
-        User user = spy(new User("testUser", "testPassword"));
+        User user = spy(new User("testUser", "testPassword", Country.INDIA));
         Wallet wallet = new Wallet(1, new Money());
         when(userDao.findByUserName("testUser")).thenReturn(Optional.of(user));
         when(walletDao.findById(1)).thenReturn(Optional.of(wallet));
@@ -86,7 +83,7 @@ public class WalletServiceTest {
     void expectAmountWithdrawn() throws Exception {
         Wallet wallet = new Wallet(1, new Money());
         wallet.deposit(new Money(100, Currency.INR));
-        User user = spy(new User(1,"testUser", "testPassword", wallet));
+        User user = spy(new User(1,"testUser", "testPassword", wallet, Country.INDIA));
         when(userDao.findByUserName("testUser")).thenReturn(Optional.of(user));
         when(walletDao.findById(1)).thenReturn(Optional.of(wallet));
         when(user.getWallet()).thenReturn(wallet);
@@ -103,7 +100,7 @@ public class WalletServiceTest {
     void expectInsufficientBalanceException() throws AuthenticationFailedException, InvalidAmountException {
         Wallet wallet = new Wallet(1,new Money());
         when(walletDao.findById(1)).thenReturn(Optional.of(wallet));
-        User user = spy(new User("testUser", "testPassword"));
+        User user = spy(new User("testUser", "testPassword", Country.INDIA));
         when(userDao.findByUserName("testUser")).thenReturn(Optional.of(user));
         when(user.getWallet()).thenReturn(wallet);
         WalletRequestModel requestModel = new WalletRequestModel(new Money(50, Currency.INR));

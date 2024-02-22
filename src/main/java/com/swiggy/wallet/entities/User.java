@@ -24,9 +24,13 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     private Wallet wallet;
 
-    public User(String userName, String password) {
+    @Enumerated(EnumType.STRING)
+    private Country country;
+
+    public User(String userName, String password, Country country) {
         this.userName = userName;
         this.password = password;
-        this.wallet = new Wallet();
+        this.wallet = new Wallet(country);
+        this.country = country;
     }
 }

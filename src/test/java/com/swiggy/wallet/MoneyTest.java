@@ -1,7 +1,7 @@
 package com.swiggy.wallet;
 
 import com.swiggy.wallet.entities.Money;
-import com.swiggy.wallet.enums.Currency;
+import com.swiggy.wallet.entities.Currency;
 import com.swiggy.wallet.exceptions.InsufficientBalanceException;
 import com.swiggy.wallet.exceptions.InvalidAmountException;
 import org.junit.jupiter.api.Test;

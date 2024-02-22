@@ -1,6 +1,5 @@
 package com.swiggy.wallet.entities;
 
-import com.swiggy.wallet.enums.Currency;
 import com.swiggy.wallet.exceptions.InsufficientBalanceException;
 import com.swiggy.wallet.exceptions.InvalidAmountException;
 import jakarta.persistence.*;
@@ -20,6 +19,10 @@ public class Wallet {
 
     public Wallet() {
         this.money = new Money(0.0, Currency.INR);
+    }
+
+    public Wallet(Country country) {
+        this.money = new Money(0.0, CountryCurrencyMap.getCurrencyByCountry(country));
     }
 
     public void deposit(Money money) throws InvalidAmountException {

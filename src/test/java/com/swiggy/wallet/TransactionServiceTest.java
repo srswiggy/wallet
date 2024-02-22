@@ -1,9 +1,6 @@
 package com.swiggy.wallet;
 
-import com.swiggy.wallet.entities.Money;
-import com.swiggy.wallet.entities.Transaction;
-import com.swiggy.wallet.entities.User;
-import com.swiggy.wallet.enums.Currency;
+import com.swiggy.wallet.entities.*;
 import com.swiggy.wallet.exceptions.InsufficientBalanceException;
 import com.swiggy.wallet.exceptions.InvalidAmountException;
 import com.swiggy.wallet.exceptions.UserNotFoundException;
@@ -66,8 +63,8 @@ public class TransactionServiceTest {
 
     @Test
     void expectTransactionSuccessful() throws InsufficientBalanceException, InvalidAmountException, UserNotFoundException {
-        User sender = new User("sender", "senderPassword");
-        User receiver = new User("receiver", "receiverPassword");
+        User sender = new User("sender", "senderPassword", Country.INDIA);
+        User receiver = new User("receiver", "receiverPassword", Country.INDIA);
         TransactionRequestModel requestModel = spy(new TransactionRequestModel("receiver", new Money(100.0, Currency.INR)));
         when(authentication.getName()).thenReturn("sender");
         when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -84,8 +81,8 @@ public class TransactionServiceTest {
 
     @Test
     void expectReceiverNotFoundOnTransaction() throws InsufficientBalanceException, InvalidAmountException {
-        User sender = new User("sender", "senderPassword");
-        User receiver = new User("receiver", "receiverPassword");
+        User sender = new User("sender", "senderPassword", Country.INDIA);
+        User receiver = new User("receiver", "receiverPassword", Country.INDIA);
         TransactionRequestModel requestModel = new TransactionRequestModel("receiver", new Money(100.0, Currency.INR));
         when(authentication.getName()).thenReturn("sender");
         when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -101,8 +98,8 @@ public class TransactionServiceTest {
 
     @Test
     void expectAllTransactions() {
-        User sender = new User("sender","testPassword");
-        User receiver = new User("receiver","testPassword");
+        User sender = new User("sender","testPassword", Country.INDIA);
+        User receiver = new User("receiver","testPassword", Country.INDIA);
         when(authentication.getName()).thenReturn("sender");
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
@@ -121,8 +118,8 @@ public class TransactionServiceTest {
 
     @Test
     void expectAllTransactionsDateBased() {
-        User sender = new User("sender", "senderPassword");
-        User receiver = new User("receiver", "receiverPassword");
+        User sender = new User("sender", "senderPassword", Country.INDIA);
+        User receiver = new User("receiver", "receiverPassword", Country.INDIA);
         LocalDateTime startDate = LocalDate.of(2022, 1, 1).atStartOfDay();
         LocalDateTime endDate = LocalDate.of(2022, 1, 31).atTime(23, 59, 59);
         Transaction transaction = new Transaction(LocalDateTime.now(), new Money(100, Currency.INR) , sender, receiver);
@@ -142,8 +139,8 @@ public class TransactionServiceTest {
 
     @Test
     void expectAllTransactionsDateBasedDifferentFromAllTransaction() {
-        User sender = new User("sender", "senderPassword");
-        User receiver = new User("receiver", "receiverPassword");
+        User sender = new User("sender", "senderPassword", Country.INDIA);
+        User receiver = new User("receiver", "receiverPassword", Country.INDIA);
         LocalDateTime startDate = LocalDate.of(2022, 1, 1).atStartOfDay();
         LocalDateTime endDate = LocalDate.of(2022, 1, 31).atTime(23, 59, 59);
         Transaction firstTransaction = new Transaction(LocalDateTime.now(), new Money(100, Currency.INR) , sender, receiver);

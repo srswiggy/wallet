@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swiggy.wallet.entities.Money;
 import com.swiggy.wallet.requestModels.WalletRequestModel;
 import com.swiggy.wallet.responseModels.WalletResponseModel;
-import com.swiggy.wallet.enums.Currency;
+import com.swiggy.wallet.entities.Currency;
 import com.swiggy.wallet.services.WalletService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
